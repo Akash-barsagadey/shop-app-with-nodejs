@@ -27,7 +27,7 @@ const fileStorage = multer.diskStorage({
     cb(null, 'images');
   },
   filename: (req, file, cb) => {
-    cb(null, file.filename + '-' + file.originalname);
+    cb(null, file.originalname);
   },
 });
 
@@ -55,6 +55,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 );
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(
   session({
     secret: 'my secret',
@@ -101,7 +102,6 @@ app.use(errorController.get404);
 app.use((req, res, next) => {
   // res.status(error.httpStatusCode).render(...);
   // res.redirect('/500');
-  console.log('req.session', req.session);
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',
